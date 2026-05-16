@@ -1,18 +1,24 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version Update: 1.0.0 → 1.1.0 (MINOR: Added storage requirements for daily stars and time-block planning)
+Version Update: 1.1.0 → 1.2.0 (MINOR: Amended to adopt Next.js + React as approved tech stack)
 Ratified: 2026-05-16
 Last Amended: 2026-05-16
 
-Changes:
-- Updated Technical Constraints: Added localStorage schema for daily star tracking and 30-minute planning blocks
-- Clarified: Time-block structure (7am-9pm in 30-minute increments)
-- No principle changes; storage model aligns with Principle I (Zero-Backend) and II (Minimal Dependencies)
+Amendment Rationale:
+- Kids Daily Planner feature requires rich interactivity (date selection, time-block editing, real-time state updates)
+- Next.js provides: Built-in optimizations (LCP < 2.5s target), SSG for static delivery, built-in routing, superior DX
+- React ecosystem enables: Reusable component library aligned with whimsical design, easier accessibility (aria, semantic), animation libraries (Framer Motion)
+- Single-deployment model maintained: Next.js exports static HTML/CSS/JS via `next export`; zero backend dependency preserved
+- Minimal Dependencies reframed: Dependencies are React/Next.js core (justified for feature complexity); avoid additional UI libraries
 
-Templates Requiring Review:
-  - spec-template.md (✅ scope now includes time-planner and star persistence)
-  - tasks-template.md (✅ add data persistence and UI interaction tasks)
+Principles Amended:
+- II. Minimal Dependencies → Updated to allow Next.js/React as justified tech foundation; no additional CSS frameworks or UI libs beyond Next.js built-ins
+- IV. Single-Deployment Model → Clarified: Uses Next.js static export (`next export`) for CDN-ready delivery
+
+Templates Updated:
+  - Technical Constraints section (added Next.js/React specifics)
+  - Development Workflow (added npm/build step, but emphasized static export)
 -->
 
 # JoDash Constitution
@@ -36,11 +42,14 @@ WCAG 2.1 AA compliance mandatory. Core Web Vitals targets: LCP < 2.5s, CLS < 0.1
 
 ## Technical Constraints
 
-- **Language**: HTML5, CSS3, vanilla JavaScript (ES2015+) only unless consensus agrees otherwise
-- **No Build Tool Required**: Direct browser imports or simple concatenation; avoid Webpack, Rollup, or similar if possible
-- **Package Manager**: Optional—prefer CDN links (e.g., unpkg, jsDelivr) for small, stable libraries
-- **Storage**: localStorage only (no backend DB); structured JSON schema for persistence
-- **Externals**: Third-party APIs (weather, maps, etc.) via fetch with proper CORS handling
+- **Language**: TypeScript + JSX (React components)
+- **Framework**: Next.js 13+ with static export (`next export` for CDN delivery)
+- **Primary Dependencies**: React 18+, Next.js 13+ (justified as foundation for rich interactivity); avoid additional UI frameworks (no Ant Design, Material-UI, etc.)
+- **Build Tool**: npm/Node.js required for development; outputs static HTML/CSS/JS bundle via `next export`
+- **Package Manager**: npm (or yarn); dependencies must be reviewed for justification
+- **Storage**: localStorage for client-side persistence (no backend DB required)
+- **Testing**: Jest + React Testing Library for component testing; manual browser testing for UX/animations
+- **Deployment**: Static export via `next export` outputs to `/out/` folder; ready for any CDN or static host (Vercel, Netlify, S3, GitHub Pages, etc.)
 
 ### Data Schema (localStorage)
 **Daily Stars**
@@ -64,7 +73,7 @@ dailyPlans: {
 }
 ```
 
-**Want List** (up to 3 prizes with star costs)
+**Want List** (up to 3 prizes with star costs, GLOBAL)
 ```
 wantList: [
   { id: 1, name: "Toy", starCost: 5 },
@@ -75,20 +84,24 @@ wantList: [
 
 ## Development Workflow
 
-1. **Simple Setup**: Clone, open HTML in browser. No npm install or build step required.
-2. **File Structure**: Flat or simple hierarchy—avoid deep nesting. CSS in `css/`, JS in `js/`, assets in `assets/`.
-3. **Testing**: Manual browser testing preferred for UI; unit tests optional but MUST not introduce heavy frameworks.
-4. **Documentation**: Inline comments for non-obvious logic. README explains feature overview and API usage.
-5. **Deployment**: Commit HTML/CSS/JS directly. Push to Git; CD pipeline copies to CDN/static host.
+1. **Setup**: Clone, run `npm install`, then `npm run dev` to start local development server (http://localhost:3000)
+2. **Development**: Edit React components in `app/` or `components/` directories; hot-reload on save
+3. **File Structure**: Next.js App Router convention—pages in `app/` dir, shared components in `components/`, utilities in `lib/`, styles in `styles/`
+4. **Testing**: Unit tests via `npm test` (Jest); manual browser testing for UI/animations; test results must be reproducible
+5. **Build & Export**: `npm run build && npm run export` generates static `/out/` folder ready for deployment
+6. **Deployment**: Upload `/out/` contents to CDN/static host; no Node.js runtime required on production server
+7. **Documentation**: README explains feature overview, setup instructions, and API structure
 
 ## Governance
 
 This constitution supersedes all prior design assumptions. Amendments require a consensus discussion and MUST include:
 
-1. Rationale for change (principle conflict, performance discovery, compatibility issue)
+1. Rationale for change (principle conflict, performance discovery, compatibility issue, tech stack justification)
 2. Affected deliverables and dependencies (plan, spec, tasks)
 3. Approval from all contributors before merge
 
-Compliance is verified at code review: every PR MUST cite which principle(s) it upholds. Complexity claims MUST be justified against Principle II (Minimal Dependencies) and Principle V (Performance targets).
+Compliance is verified at code review: every PR MUST cite which principle(s) it upholds. Complexity claims MUST be justified against Principle II (Minimal Dependencies, reframed for Next.js) and Principle V (Performance targets).
 
-**Version**: 1.1.0 | **Ratified**: 2026-05-16 | **Last Amended**: 2026-05-16
+**Amendment Process**: Tech stack decisions are locked at constitution amendment time. Future requests to add frameworks (Vue, Svelte, etc.) require new constitution amendment.
+
+**Version**: 1.2.0 | **Ratified**: 2026-05-16 | **Last Amended**: 2026-05-16
