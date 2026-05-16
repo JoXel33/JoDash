@@ -28,6 +28,14 @@ The Kids Daily Planner Dashboard is a child-friendly web application designed to
 - Q: Time-block completion tracking (auto vs manual) → A: **Auto-tracking only** (past blocks fade automatically; no explicit child action required)
 - Q: Accessibility standards for children's app → A: **16px min font, 44px touch targets, 3rd-grade reading level, 7:1 contrast, emoji+text labels**
 
+### Session 2026-05-16 (Additional Clarifications — Best Guesses)
+
+- Q: Browser and device support → A: **Modern browsers only** (Chrome 90+, Firefox 88+, Safari 14+, Edge 90+; IE 11 not supported)
+- Q: Data persistence and recovery → A: **Local-only, no cross-device sync** (each device independent; cache clear = data loss; export/backup deferred to P2)
+- Q: Touch interactions (mobile UX) → A: **Standard tap/click only** (no advanced gestures like long-press, swipe; MVP focused on tapping time blocks and buttons)
+- Q: Offline capability → A: **Full offline mode** (all features work without network; localStorage is sole persistence; future backend sync deferred to P2)
+- Q: Data export/backup feature → A: **Not in MVP scope** (deferred to P2; focus is on core features; manual localStorage inspection via dev tools as workaround)
+
 ---
 
 ## User Scenarios & Testing
@@ -192,6 +200,8 @@ Interactions throughout the app are accompanied by smooth, delightful animations
   - Mobile (320px–600px width): Single-column layout, full-width time blocks
   - Tablet (601px–1024px): Two-column layout with sidebar
   - Desktop (1025px+): Three-column layout per wireframe
+  - **Supported Browsers**: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+ (ES2021 features assumed; IE 11 not supported)
+  - **Supported Platforms**: iOS 14+, Android 8+, modern desktop operating systems (Windows 10+, macOS 11+, Linux)
 
 - **NR-003**: System MUST deliver Core Web Vitals targets (per Constitution Principle V):
   - LCP (Largest Contentful Paint): < 2.5s
@@ -202,6 +212,18 @@ Interactions throughout the app are accompanied by smooth, delightful animations
   - All data persists in localStorage without network connectivity
   - No external API calls required (zero backend dependency)
   - Page remains fully functional when network unavailable
+
+- **NR-005**: System MUST implement local-only data persistence model (MVP scope):
+  - Data is stored exclusively in browser's localStorage; no cross-device sync
+  - Each device maintains independent data; no data merging or conflict resolution
+  - If user clears browser cache or localStorage, data is permanently lost (no recovery mechanism)
+  - Data export/backup feature deferred to P2 (not in MVP scope)
+
+- **NR-006**: System MUST use standard touch/click interactions on mobile (MVP scope):
+  - All interactions via simple tap/click (no advanced gestures like swipe, long-press, pinch-zoom)
+  - Date navigation: forward/backward buttons (not swipe)
+  - Time block editing: tap to open modal (not double-tap or hold)
+  - Want list management: tap buttons for add/remove
 
 ### Key Entities
 
@@ -473,7 +495,7 @@ Interactions throughout the app are accompanied by smooth, delightful animations
 - **First Contentful Paint (FCP)**: < 0.5s
 
 ### Runtime Performance
-- **Time Block Rendering**: All 27 time blocks render in < 100ms
+- **Time Block Rendering**: All 44 time blocks render in < 100ms
 - **State Update**: Date change or star entry updates UI in < 50ms
 - **Animation Frame Rate**: 60 FPS for all animations (no dropped frames)
 
@@ -497,6 +519,39 @@ Interactions throughout the app are accompanied by smooth, delightful animations
 - **localStorage**: Browser API for persistent client-side data storage (survives page reloads and browser closures)
 - **LCP/CLS/INP**: Web Vitals metrics measuring page load, visual stability, and responsiveness
 - **WCAG 2.1 AA**: Web Content Accessibility Guidelines level AA, ensuring content is accessible to users with disabilities
+
+---
+
+## MVP Scope vs. P2 Features (Future Enhancements)
+
+### MVP Scope (In This Release)
+✅ **What's Included**:
+- Date selector with today's default + forward/backward navigation
+- 44 time blocks (7:00 AM–9:00 PM in 30-minute increments)
+- Activity descriptions per time block (text entry)
+- Star earning tracker (0–5 stars per day)
+- Global Want List (up to 3 prizes with star costs)
+- Full offline capability via localStorage
+- Child-friendly UI (gradients, animations, emojis)
+- WCAG 2.1 AA accessibility + child-specific enhancements
+- Responsive design (mobile, tablet, desktop)
+- Modern browsers (Chrome 90+, Firefox 88+, Safari 14+, Edge 90+)
+
+### P2 / Future Features (Out of Scope)
+❌ **Deferred to Future Releases**:
+- Data export/backup (JSON download)
+- Cross-device sync (cloud backend)
+- Advanced mobile gestures (swipe date navigation, long-press actions)
+- Analytics or usage tracking
+- Parental controls or monitoring dashboard
+- Prize redemption workflow (claiming prizes, tracking inventory)
+- Multiple child profiles / account switching
+- Recurring activities or templates
+- Integration with external calendars or reminders
+- Mobile app (currently web-only)
+- Speech/audio commands or screen reader enhancements beyond WCAG AA
+
+**Rationale for P2 Deferral**: These features are valuable but increase scope and complexity. MVP focuses on core functionality: daily planning, reward tracking, and goal management. P2 can be prioritized based on user feedback post-launch.
 
 ---
 

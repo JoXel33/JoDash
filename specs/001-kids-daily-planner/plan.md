@@ -1,104 +1,162 @@
-# Implementation Plan: [FEATURE]
+# Implementation Plan: Kids Daily Planner Dashboard
 
-**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
-**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
-
-**Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
+**Branch**: `001-kids-daily-planner` | **Date**: 2026-05-16 | **Spec**: [specs/001-kids-daily-planner/spec.md](specs/001-kids-daily-planner/spec.md)
+**Input**: Feature specification from `/specs/001-kids-daily-planner/spec.md`
 
 ## Summary
 
-[Extract from feature spec: primary requirement + technical approach from research]
+A child-friendly web application for managing daily schedules, earning and tracking stars, and maintaining a prize want list. The app displays a date picker (defaulting to today), 44 daily time blocks (7am-9pm in 30-min intervals), an interactive stars logger (0-5), and a max-3-item prize want list. All data persists locally in browser storage with zero backend requirements. Responsive design spans mobile to desktop with WCAG 2.1 AA accessibility enhancements (16px font minimum, 44px touch targets, 7:1 contrast, 3rd-grade reading level, emoji+text labels). Technical approach: Next.js 13+ with React and TypeScript for component reusability, animations, and accessibility; static export via `next export` for CDN-ready delivery; localStorage for persistence.
 
 ## Technical Context
 
-<!--
-  ACTION REQUIRED: Replace the content in this section with the technical details
-  for the project. The structure here is presented in advisory capacity to guide
-  the iteration process.
--->
-
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+**Language/Version**: TypeScript 5.x + React 18+  
+**Primary Dependencies**: Next.js 13+ (with static export support), React 18+  
+**Storage**: localStorage (browser-based persistence; no backend database)  
+**Testing**: Jest + React Testing Library for component tests; manual browser testing for UX/animations  
+**Target Platform**: Web (static HTML/CSS/JavaScript exports)  
+**Project Type**: web-app (static-export single-page application)  
+**Performance Goals**: LCP < 2.5s, CLS < 0.1, INP < 200ms (Core Web Vitals per Constitution Principle V)  
+**Constraints**: WCAG 2.1 AA accessibility, responsive design (mobile/tablet/desktop), progressive enhancement, zero backend dependencies, offline-capable  
+**Scale/Scope**: ~5 main screens (date picker, daily schedule, stars logger, want list, settings), ~15-20 React components, target 8-12 year-old user base, <3s TTI on mobile 4G
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
-
-[Gates determined based on constitution file]
+**✅ PASS**: All principles satisfied.
+- **I. Zero-Backend Architecture**: ✓ No backend required; all data in localStorage
+- **II. Minimal Dependencies**: ✓ Next.js + React justified for rich interactivity, animations, and accessibility; no additional UI frameworks
+- **III. Progressive Enhancement**: ✓ Core schedule visible without JS; interactivity progressively enhanced
+- **IV. Single-Deployment Model**: ✓ Uses `next export` for static output; CDN-ready
+- **V. Accessibility & Performance**: ✓ WCAG 2.1 AA + child-specific enhancements; Core Web Vitals targets embedded
 
 ## Project Structure
 
 ### Documentation (this feature)
 
 ```text
-specs/[###-feature]/
-├── plan.md              # This file (/speckit.plan command output)
-├── research.md          # Phase 0 output (/speckit.plan command)
-├── data-model.md        # Phase 1 output (/speckit.plan command)
-├── quickstart.md        # Phase 1 output (/speckit.plan command)
-├── contracts/           # Phase 1 output (/speckit.plan command)
-└── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
+specs/001-kids-daily-planner/
+├── plan.md              # This file (implementation plan)
+├── research.md          # Phase 0 output (tech decisions, patterns, best practices)
+├── data-model.md        # Phase 1 output (entities, schemas, state management)
+├── quickstart.md        # Phase 1 output (setup, dev workflow, first-run guide)
+├── spec.md              # Original feature specification
+├── checklists/
+│   └── requirements.md  # Requirement tracking
+└── contracts/           # Phase 1 output (public interfaces, API contracts if applicable)
 ```
 
 ### Source Code (repository root)
-<!--
-  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
-  for this feature. Delete unused options and expand the chosen structure with
-  real paths (e.g., apps/admin, packages/something). The delivered plan must
-  not include Option labels.
--->
 
 ```text
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
-src/
-├── models/
-├── services/
-├── cli/
-└── lib/
+Next.js App Router Structure:
 
-tests/
-├── contract/
-├── integration/
-└── unit/
+app/
+├── page.tsx                      # Main dashboard page (layout: date picker + schedule + stars + want list)
+├── layout.tsx                    # Root layout (metadata, global styles, favicon)
+├── globals.css                   # Global styles (reset, responsive breakpoints, accessibility)
+├── api/                          # API routes (NOT used; included for future extensibility)
+└── (components)/                 # Optional: grouped routes if multi-page app
 
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
+components/
+├── DatePicker.tsx                # Date navigation UI
+├── TimeBlocks.tsx                # Daily schedule grid (44 blocks, 30-min intervals)
+├── TimeBlock.tsx                 # Individual block component (click to edit activity)
+├── StarsLogger.tsx               # Stars input field (0-5 validation)
+├── WantList.tsx                  # Max-3-item prize list
+├── WantListItem.tsx              # Individual prize card (name, star cost, delete button)
+├── Animation/
+│   ├── StarPulse.tsx             # Celebratory star animation on log
+│   └── FadeTransition.tsx         # Reusable fade animation wrapper
+└── Layout/
+    └── ResponsiveContainer.tsx   # Mobile/tablet/desktop breakpoint container
 
-frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
+lib/
+├── storage/
+│   ├── dailyStars.ts             # localStorage getter/setter for star data
+│   ├── dailyPlans.ts             # localStorage getter/setter for activities
+│   └── wantList.ts               # localStorage getter/setter for want list
+├── utils/
+│   ├── dateHelpers.ts            # formatDate, getISODate, dateRange utilities
+│   ├── timeBlocks.ts             # generateTimeBlocks, getCurrentBlockId functions
+│   └── validation.ts             # validateStarInput, validatePrizeName, etc.
+├── hooks/
+│   ├── useDailyData.ts           # Custom hook: fetch+sync daily schedule/stars for date
+│   ├── useStarLogger.ts          # Custom hook: star input validation + persistence
+│   └── useWantList.ts            # Custom hook: add/remove/persist prize list
+└── types/
+    └── index.ts                  # TypeScript types: DailySchedule, TimeBlock, Prize, etc.
 
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
+styles/
+├── variables.css                 # CSS custom properties (colors, spacing, accessibility)
+├── responsive.css                # Mobile-first breakpoints (320px, 600px, 1024px)
+└── accessibility.css             # Focus states, high-contrast mode, reduced-motion respects
 
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
+public/
+├── emoji/                        # Emoji SVG assets or font sprites (for emoji+text labels)
+├── fonts/                        # Loading system fonts or custom (e.g., dyslexia-friendly option)
+└── favicon.ico                   # Application icon
+
+__tests__/
+├── components/
+│   ├── DatePicker.test.tsx
+│   ├── TimeBlock.test.tsx
+│   ├── StarsLogger.test.tsx
+│   └── WantList.test.tsx
+├── lib/
+│   ├── storage/
+│   │   ├── dailyStars.test.ts
+│   │   └── wantList.test.ts
+│   └── utils/
+│       ├── dateHelpers.test.ts
+│       └── validation.test.ts
+└── hooks/
+    ├── useDailyData.test.ts
+    └── useStarLogger.test.ts
+
+Build Output (generated by `next export`):
+
+out/
+├── index.html            # Main dashboard (pre-rendered at build time)
+├── _next/
+│   ├── static/
+│   │   ├── css/          # Minified CSS bundles
+│   │   └── js/           # JavaScript chunks
+│   └── data/
+│       └── build-manifest.json
+├── favicon.ico
+└── public/               # Copied from public/ directory
+
+Configuration:
+
+├── next.config.js        # Next.js config (output: 'export', image optimization, etc.)
+├── tsconfig.json         # TypeScript configuration
+├── jest.config.js        # Jest testing configuration
+├── package.json          # Dependencies (Next.js, React, TypeScript)
+└── .gitignore            # Exclude node_modules, build output, etc.
 ```
 
-**Structure Decision**: [Document the selected structure and reference the real
-directories captured above]
+**Structure Decision**: 
+- **Next.js App Router** chosen for modern React component patterns, file-based routing, and built-in optimization
+- **Modular component organization**: Separated concerns (animation, layout, storage) for reusability and testing
+- **Custom hooks** abstract storage and business logic from UI components (testability, reuse)
+- **CSS-in-modules avoided**: CSS files preferred per Constitution Principle II (minimal dependencies) with CSS custom properties for theming
+- **Type safety**: TypeScript throughout for better DX and error catching at build time
 
-## Complexity Tracking
 
-> **Fill ONLY if Constitution Check has violations that must be justified**
+## Phase 0: Research & Clarifications
 
-| Violation | Why Needed | Simpler Alternative Rejected Because |
-|-----------|------------|-------------------------------------|
-| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
-| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
+*All clarifications from the feature spec are already resolved. Below are key research findings on tech choices, patterns, and best practices.*
+
+**Status**: ✅ Complete - See `research.md` for detailed findings.
+
+## Phase 1: Design & Contracts
+
+**Status**: ⏳ In Progress
+
+### Data Model
+**Output**: `data-model.md` (defines entities, schemas, state management patterns)
+
+### Contracts
+**Output**: `contracts/` folder (defines public interfaces and API contracts)
+
+### Quickstart
+**Output**: `quickstart.md` (setup instructions, dev workflow, first-run guide)
