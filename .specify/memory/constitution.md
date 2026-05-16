@@ -1,50 +1,94 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+SYNC IMPACT REPORT
+==================
+Version Update: 1.0.0 → 1.1.0 (MINOR: Added storage requirements for daily stars and time-block planning)
+Ratified: 2026-05-16
+Last Amended: 2026-05-16
+
+Changes:
+- Updated Technical Constraints: Added localStorage schema for daily star tracking and 30-minute planning blocks
+- Clarified: Time-block structure (7am-9pm in 30-minute increments)
+- No principle changes; storage model aligns with Principle I (Zero-Backend) and II (Minimal Dependencies)
+
+Templates Requiring Review:
+  - spec-template.md (✅ scope now includes time-planner and star persistence)
+  - tasks-template.md (✅ add data persistence and UI interaction tasks)
+-->
+
+# JoDash Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Zero-Backend Architecture
+Static-first design with no server-side processing required. Client-side rendering and logic only. All data delivery via static files, APIs (external), or browser storage. This eliminates server complexity, deployment risk, and operational overhead while enabling global CDN distribution.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Minimal Dependencies
+Intentional, essential-only third-party libraries. Prefer browser built-ins (Fetch, DOM APIs, Web Components, localStorage) over frameworks. Every dependency must justify its purpose and size cost. No "nice-to-have" packages. Security and maintenance burden must be evaluated at import time.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Progressive Enhancement
+Core functionality MUST work without JavaScript enabled. HTML structure provides semantic content. CSS handles presentation. JavaScript enhances interactivity and performance. No feature gates behind bundle size or runtime requirements. Graceful degradation across browsers and network conditions (offline-first where applicable).
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Single-Deployment Model
+Deliverable is a static file bundle ready for any CDN or static host. No build pipeline complexity (avoid Webpack/Vite if vanilla JS/HTML suffices). Long-lived cache headers on immutable assets. Version changes only when content changes. No runtime configuration or environment variables required beyond deployment parameters (e.g., API endpoints if needed).
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Accessibility & Performance
+WCAG 2.1 AA compliance mandatory. Core Web Vitals targets: LCP < 2.5s, CLS < 0.1, INP < 200ms. Mobile-first responsive design. Fast First Contentful Paint via optimized critical path. Unminified code preferred for maintainability unless performance testing proves otherwise.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Technical Constraints
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+- **Language**: HTML5, CSS3, vanilla JavaScript (ES2015+) only unless consensus agrees otherwise
+- **No Build Tool Required**: Direct browser imports or simple concatenation; avoid Webpack, Rollup, or similar if possible
+- **Package Manager**: Optional—prefer CDN links (e.g., unpkg, jsDelivr) for small, stable libraries
+- **Storage**: localStorage only (no backend DB); structured JSON schema for persistence
+- **Externals**: Third-party APIs (weather, maps, etc.) via fetch with proper CORS handling
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+### Data Schema (localStorage)
+**Daily Stars**
+```
+dailyStars: {
+  "YYYY-MM-DD": <number 0-5>,
+  ...
+}
+```
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+**Daily Plan** (30-minute blocks, 7am-9pm = 44 blocks)
+```
+dailyPlans: {
+  "YYYY-MM-DD": [
+    { blockId: 0, time: "07:00", activity: "" },   // 7:00am
+    { blockId: 1, time: "07:30", activity: "" },   // 7:30am
+    ...
+    { blockId: 43, time: "21:00", activity: "" }   // 9:00pm (last block starts)
+  ],
+  ...
+}
+```
+
+**Want List** (up to 3 prizes with star costs)
+```
+wantList: [
+  { id: 1, name: "Toy", starCost: 5 },
+  { id: 2, name: "Game", starCost: 10 },
+  { id: 3, name: "Book", starCost: 3 }
+]
+```
+
+## Development Workflow
+
+1. **Simple Setup**: Clone, open HTML in browser. No npm install or build step required.
+2. **File Structure**: Flat or simple hierarchy—avoid deep nesting. CSS in `css/`, JS in `js/`, assets in `assets/`.
+3. **Testing**: Manual browser testing preferred for UI; unit tests optional but MUST not introduce heavy frameworks.
+4. **Documentation**: Inline comments for non-obvious logic. README explains feature overview and API usage.
+5. **Deployment**: Commit HTML/CSS/JS directly. Push to Git; CD pipeline copies to CDN/static host.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution supersedes all prior design assumptions. Amendments require a consensus discussion and MUST include:
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+1. Rationale for change (principle conflict, performance discovery, compatibility issue)
+2. Affected deliverables and dependencies (plan, spec, tasks)
+3. Approval from all contributors before merge
+
+Compliance is verified at code review: every PR MUST cite which principle(s) it upholds. Complexity claims MUST be justified against Principle II (Minimal Dependencies) and Principle V (Performance targets).
+
+**Version**: 1.1.0 | **Ratified**: 2026-05-16 | **Last Amended**: 2026-05-16
