@@ -1,0 +1,252 @@
+/* TimeBlock Component Styling */
+
+.timeBlocksContainer {
+  width: 100%;
+  padding: var(--spacing-md);
+  background: var(--color-neutral-50);
+  border-radius: var(--border-radius-lg);
+}
+
+.timeBlocksGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-sm);
+}
+
+/* Mobile-first: single column layout */
+@media (min-width: 600px) {
+  .timeBlocksGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .timeBlocksGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.timeBlock {
+  display: flex;
+  flex-direction: column;
+  min-height: var(--touch-target-min);
+  padding: var(--spacing-md);
+  background: var(--color-white);
+  border: 2px solid var(--color-neutral-200);
+  border-radius: var(--border-radius-md);
+  transition: all var(--animation-duration-normal) var(--animation-easing-ease-in-out);
+  position: relative;
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timeBlock {
+    transition: none;
+  }
+}
+
+/* Time block states */
+.timeBlock.current {
+  background: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-primary-100) 100%);
+  border-color: var(--color-primary-500);
+  border-width: 3px;
+  font-weight: 600;
+  box-shadow: 0 0 0 3px var(--color-primary-200);
+}
+
+.timeBlock.past {
+  opacity: 0.5;
+  background: var(--color-neutral-50);
+  border-color: var(--color-neutral-300);
+}
+
+.timeBlock.future {
+  background: var(--color-white);
+  border-color: var(--color-neutral-200);
+}
+
+.timeBlock:hover:not(.past) {
+  border-color: var(--color-primary-300);
+  background-color: var(--color-primary-50);
+  transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timeBlock:hover:not(.past) {
+    transform: none;
+  }
+}
+
+/* Time label area */
+.timeLabel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xs);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-neutral-700);
+}
+
+.startTime {
+  display: inline;
+  font-weight: 700;
+  color: var(--color-primary-600);
+}
+
+.endTime {
+  font-size: 0.75rem;
+  color: var(--color-neutral-500);
+}
+
+.timeBlock.current .endTime {
+  color: var(--color-primary-500);
+}
+
+/* Activity area */
+.activityArea {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 24px;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.activityText {
+  margin: 0;
+  padding: 0;
+  color: var(--color-neutral-900);
+  word-break: break-word;
+  font-weight: 500;
+}
+
+.emptyActivity {
+  margin: 0;
+  padding: 0;
+  color: var(--color-neutral-400);
+  font-style: italic;
+  font-size: 0.8125rem;
+}
+
+/* Current block indicator */
+.currentIndicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-primary-400), var(--color-secondary-400));
+  animation: slideIn var(--animation-duration-normal) var(--animation-easing-ease-in-out) forwards;
+}
+
+@keyframes slideIn {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .currentIndicator {
+    animation: none;
+  }
+}
+
+/* Loading state */
+.loadingState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: var(--spacing-lg);
+  background: var(--color-neutral-50);
+  border-radius: var(--border-radius-lg);
+  color: var(--color-neutral-600);
+  font-style: italic;
+}
+
+/* Accessibility: focus states for keyboard navigation */
+.timeBlock:focus-visible {
+  outline: 3px solid var(--color-primary-400);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: more) {
+  .timeBlock {
+    border-width: 3px;
+  }
+
+  .timeBlock.current {
+    border-width: 4px;
+    font-weight: 700;
+  }
+
+  .timeLabel {
+    font-weight: 700;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .timeBlocksContainer {
+    background: var(--color-neutral-900);
+  }
+
+  .timeBlock {
+    background: var(--color-neutral-800);
+    border-color: var(--color-neutral-700);
+    color: var(--color-neutral-100);
+  }
+
+  .timeBlock.current {
+    background: linear-gradient(135deg, var(--color-primary-900) 0%, var(--color-primary-800) 100%);
+    border-color: var(--color-primary-600);
+    box-shadow: 0 0 0 3px var(--color-primary-700);
+  }
+
+  .timeBlock.past {
+    background: var(--color-neutral-800);
+    border-color: var(--color-neutral-700);
+    opacity: 0.4;
+  }
+
+  .timeBlock:hover:not(.past) {
+    background-color: var(--color-neutral-700);
+    border-color: var(--color-primary-500);
+  }
+
+  .timeLabel {
+    color: var(--color-neutral-400);
+  }
+
+  .startTime {
+    color: var(--color-primary-400);
+  }
+
+  .endTime {
+    color: var(--color-neutral-500);
+  }
+
+  .timeBlock.current .endTime {
+    color: var(--color-primary-400);
+  }
+
+  .activityText {
+    color: var(--color-neutral-100);
+  }
+
+  .emptyActivity {
+    color: var(--color-neutral-600);
+  }
+
+  .loadingState {
+    background: var(--color-neutral-800);
+    color: var(--color-neutral-400);
+  }
+}
